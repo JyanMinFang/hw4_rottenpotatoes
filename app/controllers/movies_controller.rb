@@ -1,5 +1,15 @@
 class MoviesController < ApplicationController
 
+  def similar
+    id = params[:id] # retrieve movie ID from URI route
+    @movie = Movie.find(id) # look up movie by unique ID
+    if @movie.director.present?
+      @movies = Movie.find_all_by_director(@movie.director)
+    else
+      flash[:notice] = "'#{@movie.title}' has no director info"
+      redirect_to movies_path
+    end
+  end
   def show
     id = params[:id] # retrieve movie ID from URI route
     @movie = Movie.find(id) # look up movie by unique ID
@@ -16,11 +26,11 @@ class MoviesController < ApplicationController
     end
     @all_ratings = Movie.all_ratings
     @selected_ratings = params[:ratings] || session[:ratings] || {}
-    
+
     if @selected_ratings == {}
       @selected_ratings = Hash[@all_ratings.map {|rating| [rating, rating]}]
     end
-    
+
     if params[:sort] != session[:sort]
       session[:sort] = sort
       flash.keep
