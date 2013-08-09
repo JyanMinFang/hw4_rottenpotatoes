@@ -33,5 +33,13 @@ describe MoviesController do
       assigns(:movie).should == fake_movie
       response.should redirect_to(:action => 'index')
     end
+    it 'should be on the home page with no movie info' do
+      fake_movie = mock('Movie', :id => 5, :title => 'Alien', :director => nil)
+      Movie.should_receive(:find).with(fake_movie.id.to_s).and_return(nil)
+      get :similar, {:id => "5"}
+      flash[:notice].should == "no movie info for id '#{fake_movie.id}'"
+      assigns(:movie).should be_nil
+      response.should redirect_to(:action => 'index')
+    end
   end
 end

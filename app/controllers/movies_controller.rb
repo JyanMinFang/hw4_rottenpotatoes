@@ -3,7 +3,10 @@ class MoviesController < ApplicationController
   def similar
     id = params[:id] # retrieve movie ID from URI route
     @movie = Movie.find(id) # look up movie by unique ID
-    if @movie.director.present?
+    if @movie.nil?
+      flash[:notice] = "no movie info for id '#{id}'"
+      redirect_to movies_path
+    elsif @movie.director.present?
       @movies = Movie.find_all_by_director(@movie.director)
     else
       flash[:notice] = "'#{@movie.title}' has no director info"
