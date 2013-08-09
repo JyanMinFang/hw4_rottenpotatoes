@@ -23,8 +23,8 @@ Then /^the director of "(.+)" should be "(.+)"$/ do |title,director|
 end
 
 Given /^(?:|I )am on the details page for "(.+)"$/ do |title|
-  thisMovie = Movie.where({title: title}).first
-  visit path_to('in the detail page for ' + thisMovie._id.to_s)
+  movie = Movie.where({title: title}).first
+  visit path_to('in the detail page for ' + movie.id.to_s)
 end
 
 When /^(?:|I )follow "Find Movies With Same Director"$/ do
